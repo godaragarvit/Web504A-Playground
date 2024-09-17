@@ -48,8 +48,8 @@ function buildBookMarkDOM() {
     bookmarksContainer.textContent=""
 }
 
-bookmarks.forEach(bookmark) => {
-    const {name, url} = bookmark
+bookmarks.forEach(bookmarks) => {
+    const {name, url} = bookmarks
     //console.log(name, url)
 
     const item = discount.createElement("div")
@@ -78,5 +78,47 @@ bookmarks.forEach(bookmark) => {
     linkInfo.append(favicon, link)
     item.append(closeIcon,linkInfo)
     bookmarksContainer.appendChild(item)
+
+}
+
+//fetch bookmarks
+function fetchbookmarks() {
+    //json parse to take string and convert to an object
+    //Get a bookmark from a local storage if available
+    if (localStorage.getItem("bookmarks")) {
+        bookmarks = JSON.parse(localStorage.getItem("bookmarks"))	
+      }  else {
+        //create bookmarks array in a local storage(create a sample bookmark)
+        bookmarks = [
+            {name: "Google", url: "https://www.google.com"}
+        ]
+         localStorage.setItem("bookmarks", JSON.stringify(bookmarks))
+      }
+buildBookMarkDOM()
+    
+}
+
+//Delete bookmark
+function deleteBookmark(url) {
+    //pass the url, loop through the bookmarks array and if matched then delete bookmark.close-icon 
+    bookmarks.forEach((bookmark, i) => {
+        if (bookmark.url === url) {
+            bookmarks.splice(i, 1) //delete bookmark from the array at index i and remove 1 item.close icon
+        }
+    })
+    //update bookmarks array in localStorage, re-populate DOM.close-icon
+    localStorage.setItem("bookmarks", JSON.stringify(bookmarks))
+    fetchbookmarks()
+}
+
+//handle data from form input
+function storeBookmark(e) {
+    e.preventDefault()
+}
+const namevalue = websiteUrlEl.value
+let urlvalue = websiteUrlEl.value
+
+if (!urlvalue.includes('http://', 'https://')) {
+    urlvalue = `https://${urlvalue}`
 
 }
